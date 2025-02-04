@@ -2,8 +2,9 @@ query Info($id: Int! = 1) {
     species(id: $id) {
         name
         flavor_text
-        sprites {
-            front
+        evolution_chain {
+            ...SpeciesPreview
         }
+        ...SpriteInfo
     }
 }
