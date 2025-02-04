@@ -7,7 +7,16 @@ query Info($id: Int! = 1) {
             ...SpeciesPreview
         }
         ...SpriteInfo
+
+        moves(first: 1) @paginate(mode: SinglePage) {
+            edges {
+                node {
+                    ...MoveDisplay
+                }
+            }
+        }
     }
+
     favorites @list(name:"FavoriteSpecies") {
         ...FavoritePreview
     }

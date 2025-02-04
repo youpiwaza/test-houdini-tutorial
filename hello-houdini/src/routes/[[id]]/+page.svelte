@@ -2,6 +2,7 @@
     import { Container, Display, Sprite, Panel } from '~/components'
     import { SpeciesPreview, SpeciesPreviewPlaceholder } from '~/components'
     import { FavoritePreview, FavoritesContainer } from '~/components'
+    import { MoveDisplay, UpButton, DownButton } from '~/components'
     import { Icon } from '~/components'
     
     /* @type { import('./$houdini').PageData } */
@@ -66,6 +67,19 @@
                 next
             </a>
         </nav>
+        <div id="move-summary">
+            <MoveDisplay move={$Info.data.species.moves.edges[0].node} />
+            <div id="move-controls">
+                <UpButton
+                    disabled={!$Info.pageInfo.hasPreviousPage}
+                    on:click={async () => await Info.loadPreviousPage()}
+                />
+                <DownButton
+                    disabled={!$Info.pageInfo.hasNextPage}
+                    on:click={async () => await Info.loadNextPage()}
+                />
+            </div>
+        </div>
         <div id="species-evolution-chain">
             {#each $Info.data.species.evolution_chain as form, i}
                 <SpeciesPreview species={form} number={i + 1} />
