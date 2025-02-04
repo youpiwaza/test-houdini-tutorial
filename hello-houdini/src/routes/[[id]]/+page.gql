@@ -2,9 +2,13 @@ query Info($id: Int! = 1) {
     species(id: $id) {
         name
         flavor_text
+        favorite
         evolution_chain {
             ...SpeciesPreview
         }
         ...SpriteInfo
+    }
+    favorites @list(name:"FavoriteSpecies") {
+        ...FavoritePreview
     }
 }

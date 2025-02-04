@@ -1,16 +1,39 @@
 <script>
     import { Container, Display, Sprite, Panel } from '~/components'
     import { SpeciesPreview, SpeciesPreviewPlaceholder } from '~/components'
+    import { FavoritePreview, FavoritesContainer } from '~/components'
+    import { Icon } from '~/components'
     
     /* @type { import('./$houdini').PageData } */
     export let data
     
     $: ({ Info } = data)
+
+    const toggleFavorite = graphql(`
+        mutation ToggleFavorite($id: Int!) {
+            toggleFavorite(id: $id) {
+                species {
+                    id
+                    favorite
+                    ...FavoriteSpecies_toggle
+                }
+            }
+        }
+    `)
 </script>
 
 {#if $Info.fetching}
     <Container/>
 {:else}
+<FavoritesContainer>
+    {#each $Info.data.favorites as favorite}
+        <FavoritePreview species={favorite} />
+    {:else}
+        <p>
+            No Favorites Selected
+        </p>
+    {/each}
+</FavoritesContainer>
 <Container>
     <Panel slot="left">
         <Display id="species-name">
@@ -24,6 +47,15 @@
         <Display id="species-flavor_text">
             {$Info.data.species.flavor_text}
         </Display>
+        <button id="favorite" on:click={() => toggleFavorite.mutate({
+            id: $Info.data.species.id
+        })}>
+            <Icon
+                name="star"
+                id="favorite-star"
+                fill={$Info.data.species.favorite ? "gold" :"lightgrey"}
+            />
+        </button>
     </Panel>
     <Panel slot="right">
         <nav>
